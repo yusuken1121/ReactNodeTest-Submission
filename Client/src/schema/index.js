@@ -9,19 +9,19 @@ import { phoneCallSchema } from './phoneCallSchema.js';
 import { textMsgSchema } from './textMsgSchema.js';
 import { TaskSchema } from './taskSchema.js';
 import { MeetingSchema } from './meetingSchema.js';
-import { addFiledSchema } from './addFiledSchema.js'
+import { addFiledSchema } from './addFiledSchema.js';
 
 export {
-    addFiledSchema,
-    contactSchema,
-    propertySchema,
-    leadSchema,
-    userSchema,
-    loginSchema,
-    emailSchema,
-    documentSchema,
-    TaskSchema,
-    phoneCallSchema,
-    textMsgSchema,
-    MeetingSchema,
+  addFiledSchema,
+  contactSchema,
+  propertySchema,
+  leadSchema,
+  userSchema,
+  loginSchema,
+  emailSchema,
+  documentSchema,
+  TaskSchema,
+  phoneCallSchema,
+  textMsgSchema,
+  MeetingSchema,
 };

@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useFormik } from 'formik';
 // Chakra imports
 import {
   Box,
@@ -17,27 +17,27 @@ import {
   InputRightElement,
   Text,
   useColorModeValue,
-} from "@chakra-ui/react";
+} from '@chakra-ui/react';
 
 // Custom components
-import DefaultAuth from "layouts/auth/Default";
+import DefaultAuth from 'layouts/auth/Default';
 // Assets
 
-import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { RiEyeCloseLine } from "react-icons/ri";
-import { postApi } from "services/api";
-import { loginSchema } from "schema";
-import { toast } from "react-toastify";
-import Spinner from "components/spinner/Spinner";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchImage } from "../../../redux/slices/imageSlice";
-import { setUser } from "../../../redux/slices/localSlice";
+import { MdOutlineRemoveRedEye } from 'react-icons/md';
+import { RiEyeCloseLine } from 'react-icons/ri';
+import { postApi } from 'services/api';
+import { loginSchema } from 'schema';
+import { toast } from 'react-toastify';
+import Spinner from 'components/spinner/Spinner';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchImage } from '../../../redux/slices/imageSlice';
+import { setUser } from '../../../redux/slices/localSlice';
 
 function SignIn() {
   // Chakra color mode
-  const textColor = useColorModeValue("navy.700", "white");
-  const textColorSecondary = "gray.400";
-  const brandStars = useColorModeValue("brand.500", "brand.400");
+  const textColor = useColorModeValue('navy.700', 'white');
+  const textColorSecondary = 'gray.400';
+  const brandStars = useColorModeValue('brand.500', 'brand.400');
   const [isLoding, setIsLoding] = React.useState(false);
   const [checkBox, setCheckBox] = React.useState(true);
 
@@ -45,7 +45,7 @@ function SignIn() {
 
   useEffect(() => {
     // Dispatch the fetchRoles action on component mount
-    dispatch(fetchImage("?isActive=true"));
+    dispatch(fetchImage('?isActive=true'));
   }, [dispatch]);
 
   const image = useSelector((state) => state?.images?.images);
@@ -54,8 +54,8 @@ function SignIn() {
   const showPass = () => setShow(!show);
 
   const initialValues = {
-    username: "",
-    password: "",
+    username: '',
+    password: '',
   };
   const {
     errors,
@@ -77,12 +77,12 @@ function SignIn() {
   const login = async () => {
     try {
       setIsLoding(true);
-      let response = await postApi("api/user/login", values, checkBox);
+      let response = await postApi('api/user/login', values, checkBox);
       if (response && response.status === 200) {
-        navigate("/superAdmin");
-        toast.success("Login Successfully!");
+        navigate('/superAdmin');
+        toast.success('Login Successfully!');
         resetForm();
-        dispatch(setUser(response?.data?.user))
+        dispatch(setUser(response?.data?.user));
       } else {
         toast.error(response.response.data?.error);
       }
@@ -99,16 +99,16 @@ function SignIn() {
       image={image?.length > 0 && image[0]?.authImg}
     >
       <Flex
-        maxW={{ base: "100%", md: "max-content" }}
+        maxW={{ base: '100%', md: 'max-content' }}
         w="100%"
-        mx={{ base: "auto", lg: "0px" }}
+        mx={{ base: 'auto', lg: '0px' }}
         me="auto"
         h="fit-content"
         alignItems="start"
         justifyContent="center"
-        mb={{ base: "30px", md: "60px" }}
-        px={{ base: "25px", md: "0px" }}
-        mt={{ base: "40px", md: "14vh" }}
+        mb={{ base: '30px', md: '60px' }}
+        px={{ base: '25px', md: '0px' }}
+        mt={{ base: '40px', md: '14vh' }}
         flexDirection="column"
       >
         <Box me="auto">
@@ -128,13 +128,13 @@ function SignIn() {
         <Flex
           zIndex="2"
           direction="column"
-          w={{ base: "100%", md: "420px" }}
+          w={{ base: '100%', md: '420px' }}
           maxW="100%"
           background="transparent"
           borderRadius="15px"
-          mx={{ base: "auto", lg: "unset" }}
+          mx={{ base: 'auto', lg: 'unset' }}
           me="auto"
-          mb={{ base: "20px", md: "auto" }}
+          mb={{ base: '20px', md: 'auto' }}
         >
           <form onSubmit={handleSubmit}>
             <FormControl isInvalid={errors.username && touched.username}>
@@ -154,22 +154,22 @@ function SignIn() {
                 onBlur={handleBlur}
                 value={values.username}
                 name="username"
-                ms={{ base: "0px", md: "0px" }}
+                ms={{ base: '0px', md: '0px' }}
                 type="email"
                 placeholder="mail@simmmple.com"
-                mb={errors.username && touched.username ? undefined : "24px"}
+                mb={errors.username && touched.username ? undefined : '24px'}
                 fontWeight="500"
                 size="lg"
                 borderColor={
-                  errors.username && touched.username ? "red.300" : null
+                  errors.username && touched.username ? 'red.300' : null
                 }
                 className={
-                  errors.username && touched.username ? "isInvalid" : null
+                  errors.username && touched.username ? 'isInvalid' : null
                 }
               />
               {errors.username && touched.username && (
                 <FormErrorMessage mb="24px">
-                  {" "}
+                  {' '}
                   {errors.username}
                 </FormErrorMessage>
               )}
@@ -194,24 +194,24 @@ function SignIn() {
                   fontSize="sm"
                   placeholder="Enter Your Password"
                   name="password"
-                  mb={errors.password && touched.password ? undefined : "24px"}
+                  mb={errors.password && touched.password ? undefined : '24px'}
                   value={values.password}
                   onChange={handleChange}
                   onBlur={handleBlur}
                   size="lg"
                   variant="auth"
-                  type={show ? "text" : "password"}
+                  type={show ? 'text' : 'password'}
                   borderColor={
-                    errors.password && touched.password ? "red.300" : null
+                    errors.password && touched.password ? 'red.300' : null
                   }
                   className={
-                    errors.password && touched.password ? "isInvalid" : null
+                    errors.password && touched.password ? 'isInvalid' : null
                   }
                 />
                 <InputRightElement display="flex" alignItems="center" mt="4px">
                   <Icon
                     color={textColorSecondary}
-                    _hover={{ cursor: "pointer" }}
+                    _hover={{ cursor: 'pointer' }}
                     as={show ? RiEyeCloseLine : MdOutlineRemoveRedEye}
                     onClick={showPass}
                   />
@@ -219,7 +219,7 @@ function SignIn() {
               </InputGroup>
               {errors.password && touched.password && (
                 <FormErrorMessage mb="24px">
-                  {" "}
+                  {' '}
                   {errors.password}
                 </FormErrorMessage>
               )}
@@ -260,7 +260,7 @@ function SignIn() {
                 mb="24px"
                 disabled={isLoding ? true : false}
               >
-                {isLoding ? <Spinner /> : "Sign In"}
+                {isLoding ? <Spinner /> : 'Sign In'}
               </Button>
             </FormControl>
           </form>

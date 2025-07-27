@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import ReactApexChart from "react-apexcharts";
-import { HasAccess } from "../../redux/accessUtils";
+import React, { useEffect, useState } from 'react';
+import ReactApexChart from 'react-apexcharts';
+import { HasAccess } from '../../redux/accessUtils';
 
 const ApexChart = (props) => {
   const { data } = props;
 
-  let permissions = []
-  let permissionsLength = []
+  let permissions = [];
+  let permissionsLength = [];
 
-  data?.forEach(item => {
+  data?.forEach((item) => {
     if (item.name) {
       permissions.push(item.name);
       permissionsLength.push(item.length);
@@ -19,8 +19,8 @@ const ApexChart = (props) => {
     series: [
       {
         name: 'Data',
-        data: permissionsLength?.map((item) => item)
-      }
+        data: permissionsLength?.map((item) => item),
+      },
     ],
     options: {
       chart: {
@@ -31,42 +31,45 @@ const ApexChart = (props) => {
         bar: {
           borderRadius: 10,
           columnWidth: '40%',
-        }
+        },
       },
       stroke: {
-        width: 2
+        width: 2,
       },
       grid: {
         row: {
-          colors: ['#fff', '#f2f2f2']
-        }
+          colors: ['#fff', '#f2f2f2'],
+        },
       },
       xaxis: {
         categories: permissions?.map((item) => item),
-        tickPlacement: 'on'
+        tickPlacement: 'on',
       },
 
       fill: {
         type: 'gradient',
         gradient: {
           shade: 'light',
-          type: "horizontal",
+          type: 'horizontal',
           shadeIntensity: 0.25,
           inverseColors: true,
           opacityFrom: 0.85,
           opacityTo: 0.85,
-          stops: [50, 0, 100]
+          stops: [50, 0, 100],
         },
-      }
+      },
     },
   };
   return (
     <div id="chart">
-      <ReactApexChart options={state.options} series={state.series} type="bar" height={350} />
+      <ReactApexChart
+        options={state.options}
+        series={state.series}
+        type="bar"
+        height={350}
+      />
     </div>
   );
 };
 
 export default ApexChart;
-
-
