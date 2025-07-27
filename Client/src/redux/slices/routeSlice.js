@@ -1,4 +1,3 @@
-
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { constant } from '../../constant';
@@ -8,18 +7,17 @@ export const fetchRouteData = createAsyncThunk('fetchRouteData', async () => {
   try {
     const response = await getApi(`api/route/`);
     return response.data;
-} catch (error) {
+  } catch (error) {
     throw error;
-}
+  }
 });
-
 
 const routeSlice = createSlice({
   name: 'routeData',
   initialState: {
     data: [],
     isLoading: false,
-    error: "",
+    error: '',
   },
   extraReducers: (builder) => {
     builder
@@ -29,7 +27,7 @@ const routeSlice = createSlice({
       .addCase(fetchRouteData.fulfilled, (state, action) => {
         state.isLoading = false;
         state.data = action.payload;
-        state.error = "";
+        state.error = '';
       })
       .addCase(fetchRouteData.rejected, (state, action) => {
         state.isLoading = false;

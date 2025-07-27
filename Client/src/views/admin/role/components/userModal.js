@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -17,19 +17,19 @@ import {
   Text,
   Td,
   useColorModeValue,
-} from "@chakra-ui/react";
-import Spinner from "components/spinner/Spinner";
+} from '@chakra-ui/react';
+import Spinner from 'components/spinner/Spinner';
 import {
   useGlobalFilter,
   usePagination,
   useSortBy,
   useTable,
-} from "react-table";
-import { FaSort, FaSortDown, FaSortUp } from "react-icons/fa";
-import Pagination from "components/pagination/Pagination";
-import RoleUser from "./roleUser";
-import { getApi } from "services/api";
-import DataNotFound from "components/notFoundData";
+} from 'react-table';
+import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa';
+import Pagination from 'components/pagination/Pagination';
+import RoleUser from './roleUser';
+import { getApi } from 'services/api';
+import DataNotFound from 'components/notFoundData';
 
 function UserModal(props) {
   const {
@@ -42,8 +42,8 @@ function UserModal(props) {
     fetchData,
   } = props;
 
-  const textColor = useColorModeValue("secondaryGray.900", "white");
-  const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
+  const textColor = useColorModeValue('secondaryGray.900', 'white');
+  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
   const columns = useMemo(() => columnsData, [columnsData]);
   const [selectedValues, setSelectedValues] = useState([]);
   const [isLoding, setIsLoding] = useState(false);
@@ -54,8 +54,9 @@ function UserModal(props) {
 
   const tableInstance = useTable(
     {
-      columns, data,
-      initialState: { pageIndex: 0 }
+      columns,
+      data,
+      initialState: { pageIndex: 0 },
     },
     useGlobalFilter,
     useSortBy,
@@ -76,13 +77,12 @@ function UserModal(props) {
     nextPage,
     previousPage,
     setPageSize,
-    state: { pageIndex, pageSize }
+    state: { pageIndex, pageSize },
   } = tableInstance;
 
   if (pageOptions.length < gopageValue) {
-    setGopageValue(pageOptions.length)
+    setGopageValue(pageOptions.length);
   }
-
 
   const handleCheckboxChange = (event, value) => {
     if (event.target.checked) {
@@ -97,53 +97,84 @@ function UserModal(props) {
   const userFetchData = async () => {
     let result = await getApi('api/user/?role=user');
     setUserData(result?.data?.user);
-  }
+  };
 
   useEffect(() => {
-    userFetchData()
-  }, [])
-
-
+    userFetchData();
+  }, []);
 
   return (
     <>
-      <Modal onClose={() => setOpenUser(false)} isOpen={isOpen} isCentered size={"4xl"} style={{ height: "560px" }}>
+      <Modal
+        onClose={() => setOpenUser(false)}
+        isOpen={isOpen}
+        isCentered
+        size={'4xl'}
+        style={{ height: '560px' }}
+      >
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader height={"580px"} >
+          <ModalHeader height={'580px'}>
             <Flex justifyContent={'space-between'}>
               <Text>Users</Text>
-              <Button variant="brand" size="sm" me={'2rem'} onClick={() => { setOpenUser(false); setUserModal(true) }}>Manage Users</Button>
-              <ModalCloseButton mt='2' />
+              <Button
+                variant="brand"
+                size="sm"
+                me={'2rem'}
+                onClick={() => {
+                  setOpenUser(false);
+                  setUserModal(true);
+                }}
+              >
+                Manage Users
+              </Button>
+              <ModalCloseButton mt="2" />
             </Flex>
           </ModalHeader>
-          <ModalBody overflow={"auto"} height={"400px"}>
-            <Table {...getTableProps()} variant="simple" color="gray.500" mb="24px">
+          <ModalBody overflow={'auto'} height={'400px'}>
+            <Table
+              {...getTableProps()}
+              variant="simple"
+              color="gray.500"
+              mb="24px"
+            >
               <Thead>
                 {headerGroups?.map((headerGroup, index) => (
                   <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
                     {headerGroup.headers?.map((column, index) => (
                       <Th
-                        {...column.getHeaderProps(column.isSortable !== false && column.getSortByToggleProps())}
+                        {...column.getHeaderProps(
+                          column.isSortable !== false &&
+                            column.getSortByToggleProps()
+                        )}
                         pe="10px"
                         key={index}
                         borderColor={borderColor}
                       >
-
                         <Flex
                           align="center"
-                          justifyContent={column.center ? "center" : "start"}
-                          fontSize={{ sm: "14px", lg: "16px" }}
+                          justifyContent={column.center ? 'center' : 'start'}
+                          fontSize={{ sm: '14px', lg: '16px' }}
                           color=" secondaryGray.900"
                         >
-                          <span style={{
-                            textTransform: "capitalize",
-                          }}>
-                            {column.render("Header")}
+                          <span
+                            style={{
+                              textTransform: 'capitalize',
+                            }}
+                          >
+                            {column.render('Header')}
                           </span>
                           {column.isSortable !== false && (
                             <span>
-                              {column.isSorted ? (column.isSortedDesc ? <FaSortDown /> : <FaSortUp />) : <FaSort />}
+                              {column.isSorted ? (
+                                column.isSortedDesc ? (
+                                  <FaSortDown />
+                                ) : (
+                                  <FaSortUp />
+                                )
+                              ) : (
+                                <FaSort />
+                              )}
                             </span>
                           )}
                         </Flex>
@@ -153,37 +184,55 @@ function UserModal(props) {
                 ))}
               </Thead>
               <Tbody {...getTableBodyProps()}>
-                {isLoding ?
+                {isLoding ? (
                   <Tr>
                     <Td colSpan={columns?.length}>
-                      <Flex justifyContent={'center'} alignItems={'center'} width="100%" color={textColor} fontSize="sm" fontWeight="700">
+                      <Flex
+                        justifyContent={'center'}
+                        alignItems={'center'}
+                        width="100%"
+                        color={textColor}
+                        fontSize="sm"
+                        fontWeight="700"
+                      >
                         <Spinner />
                       </Flex>
                     </Td>
                   </Tr>
-                  : data?.length === 0 ? (
-                    <Tr>
-                      <Td colSpan={columns.length}>
-                        <Text textAlign={'center'} width="100%" color={textColor} fontSize="sm" fontWeight="700">
-                          <DataNotFound />
-                        </Text>
-                      </Td>
-                    </Tr>
-                  ) : page?.map((row, i) => {
+                ) : data?.length === 0 ? (
+                  <Tr>
+                    <Td colSpan={columns.length}>
+                      <Text
+                        textAlign={'center'}
+                        width="100%"
+                        color={textColor}
+                        fontSize="sm"
+                        fontWeight="700"
+                      >
+                        <DataNotFound />
+                      </Text>
+                    </Td>
+                  </Tr>
+                ) : (
+                  page?.map((row, i) => {
                     prepareRow(row);
                     return (
                       <Tr {...row?.getRowProps()} key={i}>
                         {row?.cells?.map((cell, index) => {
-                          let data = "";
-                          if (cell?.column.Header === "#") {
+                          let data = '';
+                          if (cell?.column.Header === '#') {
                             data = (
-                              <Flex align="center" >
-                                <Text color={textColor} fontSize="sm" fontWeight="700">
+                              <Flex align="center">
+                                <Text
+                                  color={textColor}
+                                  fontSize="sm"
+                                  fontWeight="700"
+                                >
                                   {cell?.row?.index + 1}
                                 </Text>
                               </Flex>
                             );
-                          } else if (cell?.column.Header === "email Id") {
+                          } else if (cell?.column.Header === 'email Id') {
                             data = (
                               <Text
                                 me="10px"
@@ -194,7 +243,7 @@ function UserModal(props) {
                                 {cell?.value}
                               </Text>
                             );
-                          } else if (cell?.column.Header === "first Name") {
+                          } else if (cell?.column.Header === 'first Name') {
                             data = (
                               <Text
                                 me="10px"
@@ -205,7 +254,7 @@ function UserModal(props) {
                                 {cell?.value ? cell?.value : ' - '}
                               </Text>
                             );
-                          } else if (cell?.column.Header === "last Name") {
+                          } else if (cell?.column.Header === 'last Name') {
                             data = (
                               <Text
                                 me="10px"
@@ -216,9 +265,13 @@ function UserModal(props) {
                                 {cell?.value ? cell?.value : ' - '}
                               </Text>
                             );
-                          } else if (cell?.column.Header === "role") {
+                          } else if (cell?.column.Header === 'role') {
                             data = (
-                              <Text color={textColor} fontSize="sm" fontWeight="700">
+                              <Text
+                                color={textColor}
+                                fontSize="sm"
+                                fontWeight="700"
+                              >
                                 {cell?.value}
                               </Text>
                             );
@@ -227,8 +280,8 @@ function UserModal(props) {
                             <Td
                               {...cell?.getCellProps()}
                               key={index}
-                              fontSize={{ sm: "14px" }}
-                              minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                              fontSize={{ sm: '14px' }}
+                              minW={{ sm: '150px', md: '200px', lg: 'auto' }}
                               borderColor="transparent"
                             >
                               {data}
@@ -237,7 +290,8 @@ function UserModal(props) {
                         })}
                       </Tr>
                     );
-                  })}
+                  })
+                )}
               </Tbody>
             </Table>
             {data?.length > 5 && (
@@ -268,7 +322,7 @@ function UserModal(props) {
               colorScheme="red"
               sx={{
                 marginLeft: 2,
-                textTransform: "capitalize",
+                textTransform: 'capitalize',
               }}
             >
               Close

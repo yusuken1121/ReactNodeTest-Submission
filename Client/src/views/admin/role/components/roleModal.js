@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -17,18 +17,18 @@ import {
   Text,
   Td,
   useColorModeValue,
-} from "@chakra-ui/react";
-import Spinner from "components/spinner/Spinner";
+} from '@chakra-ui/react';
+import Spinner from 'components/spinner/Spinner';
 import {
   useGlobalFilter,
   usePagination,
   useSortBy,
   useTable,
-} from "react-table";
-import ChangeAccess from "../changeAccess";
-import UserModal from "./userModal";
-import { getApi } from "services/api";
-import DataNotFound from "components/notFoundData";
+} from 'react-table';
+import ChangeAccess from '../changeAccess';
+import UserModal from './userModal';
+import { getApi } from 'services/api';
+import DataNotFound from 'components/notFoundData';
 
 function RoleModal(props) {
   const {
@@ -46,19 +46,19 @@ function RoleModal(props) {
 
   const tableColumns = [
     {
-      Header: "#",
-      accessor: "_id",
+      Header: '#',
+      accessor: '_id',
       isSortable: false,
-      width: 10
+      width: 10,
     },
     { Header: 'email Id', accessor: 'username' },
-    { Header: "first Name", accessor: "firstName", },
-    { Header: "last Name", accessor: "lastName", },
-    { Header: "role", accessor: "role", },
+    { Header: 'first Name', accessor: 'firstName' },
+    { Header: 'last Name', accessor: 'lastName' },
+    { Header: 'role', accessor: 'role' },
   ];
 
-  const textColor = useColorModeValue("secondaryGray.900", "white");
-  const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
+  const textColor = useColorModeValue('secondaryGray.900', 'white');
+  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
   const columns = useMemo(() => columnsData, [columnsData]);
   const [isLoding, setIsLoding] = useState(false);
 
@@ -66,7 +66,7 @@ function RoleModal(props) {
   const [openUser, setOpenUser] = useState();
   const [gopageValue, setGopageValue] = useState();
   const data = useMemo(() => tableData || [], [tableData]);
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem('user'));
   const [userdata, setUserData] = useState([]);
 
   const tableInstance = useTable(
@@ -98,45 +98,58 @@ function RoleModal(props) {
       let result = await getApi('api/role-access/assignedUsers/', _id);
       setUserData(result?.data);
     }
-  }
+  };
 
   useEffect(() => {
-    userFetchData()
-  }, [_id])
+    userFetchData();
+  }, [_id]);
 
   return (
     <>
-      <Modal onClose={() => setRoleModal(false)} isOpen={isOpen} isCentered size={"xl"}>
+      <Modal
+        onClose={() => setRoleModal(false)}
+        isOpen={isOpen}
+        isCentered
+        size={'xl'}
+      >
         <ModalOverlay />
-        <ModalContent height={"580px"} maxWidth={"2xl"}>
+        <ModalContent height={'580px'} maxWidth={'2xl'}>
           <ModalHeader>
             <Flex justifyContent={'space-between'}>
-              <Text textTransform={"capitalize"}>{name} Access</Text>
-              <Text style={{
-                marginRight: "25px",
-                fontSize: "15px",
-                fontWeight: "700",
-                marginTop: '5px',
-                color: 'blue',
-                cursor: 'pointer',
-                textDecoration: 'underline'
-              }} onClick={() => { setOpenUser(true); setRoleModal(false); }}>View user's in {name} role</Text>
-              <ModalCloseButton mt='2' />
+              <Text textTransform={'capitalize'}>{name} Access</Text>
+              <Text
+                style={{
+                  marginRight: '25px',
+                  fontSize: '15px',
+                  fontWeight: '700',
+                  marginTop: '5px',
+                  color: 'blue',
+                  cursor: 'pointer',
+                  textDecoration: 'underline',
+                }}
+                onClick={() => {
+                  setOpenUser(true);
+                  setRoleModal(false);
+                }}
+              >
+                View user's in {name} role
+              </Text>
+              <ModalCloseButton mt="2" />
             </Flex>
           </ModalHeader>
-          <ModalBody overflow={"auto"} height={"400px"}>
+          <ModalBody overflow={'auto'} height={'400px'}>
             <Table>
               <Thead>
                 {headerGroups?.map((headerGroup, index) => (
                   <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
                     {headerGroup.headers?.map((column, index) => (
                       <Th
-                        sx={{ width: "10px" }}
+                        sx={{ width: '10px' }}
                         key={index}
                         borderColor={borderColor}
-                        display={column.display === false && "none"}
+                        display={column.display === false && 'none'}
                       >
-                        {column.display !== false && column.render("Header")}
+                        {column.display !== false && column.render('Header')}
                       </Th>
                     ))}
                   </Tr>
@@ -147,8 +160,8 @@ function RoleModal(props) {
                   <Tr>
                     <Td colSpan={columns?.length}>
                       <Flex
-                        justifyContent={"center"}
-                        alignItems={"center"}
+                        justifyContent={'center'}
+                        alignItems={'center'}
                         width="100%"
                         color={textColor}
                         fontSize="sm"
@@ -162,7 +175,7 @@ function RoleModal(props) {
                   <Tr>
                     <Td colSpan={columns.length}>
                       <Text
-                        textAlign={"center"}
+                        textAlign={'center'}
                         width="100%"
                         color={textColor}
                         fontSize="sm"
@@ -178,8 +191,8 @@ function RoleModal(props) {
                     return (
                       <Tr {...row?.getRowProps()} key={i}>
                         {row?.cells?.map((cell, index) => {
-                          let data = "";
-                          if (cell?.column.Header === "title") {
+                          let data = '';
+                          if (cell?.column.Header === 'title') {
                             data = (
                               <Text
                                 me="10px"
@@ -190,7 +203,7 @@ function RoleModal(props) {
                                 {cell?.value}
                               </Text>
                             );
-                          } else if (cell?.column.Header === "create") {
+                          } else if (cell?.column.Header === 'create') {
                             data = (
                               <Text
                                 color={textColor}
@@ -200,7 +213,7 @@ function RoleModal(props) {
                                 {cell?.value ? 'Yes' : 'No'}
                               </Text>
                             );
-                          } else if (cell?.column.Header === "view") {
+                          } else if (cell?.column.Header === 'view') {
                             data = (
                               <Text
                                 color={textColor}
@@ -210,7 +223,7 @@ function RoleModal(props) {
                                 {cell?.value ? 'Yes' : 'No'}
                               </Text>
                             );
-                          } else if (cell?.column.Header === "update") {
+                          } else if (cell?.column.Header === 'update') {
                             data = (
                               <Text
                                 color={textColor}
@@ -220,7 +233,7 @@ function RoleModal(props) {
                                 {cell?.value ? 'Yes' : 'No'}
                               </Text>
                             );
-                          } else if (cell?.column.Header === "delete") {
+                          } else if (cell?.column.Header === 'delete') {
                             data = (
                               <Text
                                 color={textColor}
@@ -235,11 +248,11 @@ function RoleModal(props) {
                             <Td
                               {...cell?.getCellProps()}
                               key={index}
-                              fontSize={{ sm: "14px" }}
-                              minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                              fontSize={{ sm: '14px' }}
+                              minW={{ sm: '150px', md: '200px', lg: 'auto' }}
                               borderColor="transparent"
                               sx={{
-                                display: cell?.column.Header === "#" && "none",
+                                display: cell?.column.Header === '#' && 'none',
                               }}
                             >
                               {data}
@@ -254,7 +267,14 @@ function RoleModal(props) {
             </Table>
           </ModalBody>
           <ModalFooter>
-            <Button variant="brand" size="sm" onClick={() => { setEditModal(true); setRoleModal(false) }}>
+            <Button
+              variant="brand"
+              size="sm"
+              onClick={() => {
+                setEditModal(true);
+                setRoleModal(false);
+              }}
+            >
               Change Access
             </Button>
             <Button
@@ -264,7 +284,7 @@ function RoleModal(props) {
               colorScheme="red"
               sx={{
                 marginLeft: 2,
-                textTransform: "capitalize",
+                textTransform: 'capitalize',
               }}
             >
               Close
@@ -272,8 +292,21 @@ function RoleModal(props) {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      <ChangeAccess tableData={tableData ?? []} accessRole={tableData ?? []} setAccess={setAccess} setRoleModal={setRoleModal} columnsData={columnsData ?? []} _id={_id} fetchData={fetchData} name={name} setEditModal={setEditModal} setAction={setAction} editModal={editModal} />
-      <UserModal isOpen={openUser}
+      <ChangeAccess
+        tableData={tableData ?? []}
+        accessRole={tableData ?? []}
+        setAccess={setAccess}
+        setRoleModal={setRoleModal}
+        columnsData={columnsData ?? []}
+        _id={_id}
+        fetchData={fetchData}
+        name={name}
+        setEditModal={setEditModal}
+        setAction={setAction}
+        editModal={editModal}
+      />
+      <UserModal
+        isOpen={openUser}
         setRoleModal={setRoleModal}
         setOpenUser={setOpenUser}
         onOpen={onOpen}

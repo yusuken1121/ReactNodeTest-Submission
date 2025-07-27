@@ -3,6 +3,6 @@ const auth = require('../../middelwares/auth');
 const status = require('./status');
 const router = express.Router();
 
-router.get('/', auth, status.index)
+router.get('/', auth, status.index);
 
-module.exports = router
+module.exports = router;

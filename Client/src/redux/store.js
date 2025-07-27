@@ -6,7 +6,7 @@ import imageReducer from './slices/imageSlice';
 import userReducer from './slices/localSlice';
 import routeReducer from './slices/routeSlice';
 import advanceSearchSlice from './slices/advanceSearchSlice';
-import leadSlice from './slices/leadSlice'
+import leadSlice from './slices/leadSlice';
 import propertyCustomFiledSlice from './slices/propertyCustomFiledSlice';
 import propertySlice from './slices/propertySlice';
 import contactSlice from './slices/contactSlice';

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const moduleActiveDeactiveSchema = new mongoose.Schema({
   moduleName: {
@@ -15,4 +15,8 @@ const moduleActiveDeactiveSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('ModuleActiveDeactive', moduleActiveDeactiveSchema, 'ModuleActiveDeactive');
+module.exports = mongoose.model(
+  'ModuleActiveDeactive',
+  moduleActiveDeactiveSchema,
+  'ModuleActiveDeactive'
+);

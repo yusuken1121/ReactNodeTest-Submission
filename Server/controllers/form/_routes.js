@@ -11,4 +11,4 @@ router.put('/edit/:id', auth, form.edit);
 router.delete('/delete/:id', auth, form.deleteField);
 router.post('/deleteMany', auth, form.deleteManyField);
 
-module.exports = router
+module.exports = router;

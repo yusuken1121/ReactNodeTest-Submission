@@ -1,5 +1,12 @@
 import React from 'react';
-import { PDFDownloadLink, Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import {
+  PDFDownloadLink,
+  Document,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+} from '@react-pdf/renderer';
 
 // Create styles
 const styles = StyleSheet.create({
@@ -30,15 +37,16 @@ const MyDocument = () => (
       <View style={styles.section}>
         <Text style={styles.header}>Hello World</Text>
         <Text style={styles.text}>
-          This is an example of a simple PDF document created using @react-pdf/renderer.
+          This is an example of a simple PDF document created using
+          @react-pdf/renderer.
         </Text>
         <Text style={styles.text}>
-          You can add more text, images, and other elements to your PDF document.
+          You can add more text, images, and other elements to your PDF
+          document.
         </Text>
       </View>
     </Page>
   </Document>
 );
-
 
 export default MyDocument;

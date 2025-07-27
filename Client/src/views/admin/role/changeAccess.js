@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -18,17 +18,17 @@ import {
   Td,
   Checkbox,
   useColorModeValue,
-} from "@chakra-ui/react";
-import Spinner from "components/spinner/Spinner";
+} from '@chakra-ui/react';
+import Spinner from 'components/spinner/Spinner';
 import {
   useGlobalFilter,
   usePagination,
   useSortBy,
   useTable,
-} from "react-table";
-import { useFormik } from "formik";
-import { putApi } from "services/api";
-import DataNotFound from "components/notFoundData";
+} from 'react-table';
+import { useFormik } from 'formik';
+import { putApi } from 'services/api';
+import DataNotFound from 'components/notFoundData';
 
 function ChangeAccess(props) {
   const {
@@ -39,11 +39,12 @@ function ChangeAccess(props) {
     setAccess,
     _id,
     setRoleModal,
-    editModal, setEditModal,
+    editModal,
+    setEditModal,
   } = props;
 
-  const textColor = useColorModeValue("secondaryGray.900", "white");
-  const borderColor = useColorModeValue("gray.200", "whiteAlpha.100");
+  const textColor = useColorModeValue('secondaryGray.900', 'white');
+  const borderColor = useColorModeValue('gray.200', 'whiteAlpha.100');
   const columns = useMemo(() => columnsData, [columnsData]);
   const [isLoding, setIsLoding] = useState(false);
 
@@ -88,12 +89,7 @@ function ChangeAccess(props) {
     },
   });
 
-  const {
-    values,
-    handleSubmit,
-    setFieldValue,
-    resetForm
-  } = formik;
+  const { values, handleSubmit, setFieldValue, resetForm } = formik;
 
   // const handleCheckboxChange = (index, fieldName, secondFieldName) => (event) => {
   //   const { checked } = event.target;
@@ -135,51 +131,64 @@ function ChangeAccess(props) {
   //   setFieldValue('access', mm);
   // };
 
-  const handleCheckboxChange = (index, fieldName, secondFieldName) => (event) => {
-    const { checked } = event.target;
-    const leadsIndex = values.access.findIndex(accessItem => accessItem.title === "Leads");
-    const contactsIndex = values.access.findIndex(accessItem => accessItem.title === "Contacts");
+  const handleCheckboxChange =
+    (index, fieldName, secondFieldName) => (event) => {
+      const { checked } = event.target;
+      const leadsIndex = values.access.findIndex(
+        (accessItem) => accessItem.title === 'Leads'
+      );
+      const contactsIndex = values.access.findIndex(
+        (accessItem) => accessItem.title === 'Contacts'
+      );
 
-    const updatedAccess = values.access.map((item, idx) => {
-      if (idx === index) {
-        const updatedItem = { ...item, [fieldName]: checked };
-        if (secondFieldName && !checked) {
-          updatedItem[secondFieldName] = updatedItem.update = updatedItem.delete = checked;
-        } else if (secondFieldName) {
-          updatedItem[secondFieldName] = checked;
+      const updatedAccess = values.access.map((item, idx) => {
+        if (idx === index) {
+          const updatedItem = { ...item, [fieldName]: checked };
+          if (secondFieldName && !checked) {
+            updatedItem[secondFieldName] =
+              updatedItem.update =
+              updatedItem.delete =
+                checked;
+          } else if (secondFieldName) {
+            updatedItem[secondFieldName] = checked;
+          }
+          return updatedItem;
         }
-        return updatedItem;
-      }
-      return item;
-    });
+        return item;
+      });
 
-    const finalUpdatedAccessWith = updatedAccess.map((item, idx) => {
-      if (secondFieldName && checked === false && (!updatedAccess[contactsIndex]?.view && !updatedAccess[leadsIndex]?.view)) {
-        if (["Emails", "Calls", "Meetings"].includes(item.title)) {
-          return {
-            ...item,
-            create: false,
-            delete: false,
-            update: false,
-            view: false
-          };
+      const finalUpdatedAccessWith = updatedAccess.map((item, idx) => {
+        if (
+          secondFieldName &&
+          checked === false &&
+          !updatedAccess[contactsIndex]?.view &&
+          !updatedAccess[leadsIndex]?.view
+        ) {
+          if (['Emails', 'Calls', 'Meetings'].includes(item.title)) {
+            return {
+              ...item,
+              create: false,
+              delete: false,
+              update: false,
+              view: false,
+            };
+          }
         }
-      }
-      return item;
-    });
+        return item;
+      });
 
-    setFieldValue('access', finalUpdatedAccessWith);
-  };
+      setFieldValue('access', finalUpdatedAccessWith);
+    };
 
   const EditData = async () => {
     try {
       setIsLoding(true);
-      setAccess(values?.access)
+      setAccess(values?.access);
       let response = await putApi(`api/role-access/edit/${_id}`, values);
       if (response.status === 200) {
-        setEditModal(false)
-        fetchData()
-        setRoleModal(true)
+        setEditModal(false);
+        fetchData();
+        setRoleModal(true);
       }
     } catch (e) {
       console.log(e);
@@ -189,15 +198,17 @@ function ChangeAccess(props) {
   };
 
   const disable = (cell) => {
-    if (["Emails", "Calls", "Meetings"].includes(cell.title)) {
-      return !values?.access?.some((i => (i.title === "Contacts" || i.title === "Leads") && i.view));
+    if (['Emails', 'Calls', 'Meetings'].includes(cell.title)) {
+      return !values?.access?.some(
+        (i) => (i.title === 'Contacts' || i.title === 'Leads') && i.view
+      );
     }
     return false;
-  }
+  };
 
   useEffect(() => {
-    fetchData()
-  }, [editModal])
+    fetchData();
+  }, [editModal]);
 
   useEffect(() => {
     if (Array.isArray(data) && data?.length > 0) {
@@ -206,31 +217,36 @@ function ChangeAccess(props) {
   }, [data, setPageSize]);
 
   return (
-    <Modal onClose={() => setEditModal(false)} isOpen={editModal} isCentered size={"xl"}>
+    <Modal
+      onClose={() => setEditModal(false)}
+      isOpen={editModal}
+      isCentered
+      size={'xl'}
+    >
       <ModalOverlay />
-      <ModalContent height={"580px"} maxWidth={"2xl"}>
-        <ModalHeader textTransform={"capitalize"}>{name} Access</ModalHeader>
+      <ModalContent height={'580px'} maxWidth={'2xl'}>
+        <ModalHeader textTransform={'capitalize'}>{name} Access</ModalHeader>
         <ModalCloseButton />
-        <ModalBody overflow={"auto"} height={"400px"}>
+        <ModalBody overflow={'auto'} height={'400px'}>
           <Table>
             <Thead>
               {headerGroups?.map((headerGroup, index) => (
                 <Tr {...headerGroup.getHeaderGroupProps()} key={index}>
                   {headerGroup.headers?.map((column, index) => (
                     <Th
-                      sx={{ width: "10px" }}
+                      sx={{ width: '10px' }}
                       pe="10px"
                       key={index}
                       borderColor={borderColor}
-                      display={column.display === false && "none"}
+                      display={column.display === false && 'none'}
                     >
                       <Flex
                         justify="space-between"
                         align="center"
-                        fontSize={{ sm: "10px", lg: "12px" }}
+                        fontSize={{ sm: '10px', lg: '12px' }}
                         color="gray.400"
                       >
-                        {column.display !== false && column.render("Header")}
+                        {column.display !== false && column.render('Header')}
                       </Flex>
                     </Th>
                   ))}
@@ -242,8 +258,8 @@ function ChangeAccess(props) {
                 <Tr>
                   <Td colSpan={columns?.length}>
                     <Flex
-                      justifyContent={"center"}
-                      alignItems={"center"}
+                      justifyContent={'center'}
+                      alignItems={'center'}
                       width="100%"
                       color={textColor}
                       fontSize="sm"
@@ -257,7 +273,7 @@ function ChangeAccess(props) {
                 <Tr>
                   <Td colSpan={columns.length}>
                     <Text
-                      textAlign={"center"}
+                      textAlign={'center'}
                       width="100%"
                       color={textColor}
                       fontSize="sm"
@@ -273,8 +289,8 @@ function ChangeAccess(props) {
                   return (
                     <Tr {...row?.getRowProps()} key={i}>
                       {row?.cells?.map((cell, index) => {
-                        let data = "";
-                        if (cell?.column.Header === "title") {
+                        let data = '';
+                        if (cell?.column.Header === 'title') {
                           data = (
                             <Text
                               me="10px"
@@ -285,7 +301,7 @@ function ChangeAccess(props) {
                               {cell?.value}
                             </Text>
                           );
-                        } else if (cell?.column.Header === "create") {
+                        } else if (cell?.column.Header === 'create') {
                           data = (
                             <Text
                               color={textColor}
@@ -296,11 +312,15 @@ function ChangeAccess(props) {
                                 disabled={disable(cell?.row?.original)}
                                 isChecked={values?.access[i]?.create}
                                 defaultChecked={values?.access[i]?.create}
-                                onChange={handleCheckboxChange(i, 'create', "view")}
+                                onChange={handleCheckboxChange(
+                                  i,
+                                  'create',
+                                  'view'
+                                )}
                               />
                             </Text>
                           );
-                        } else if (cell?.column.Header === "view") {
+                        } else if (cell?.column.Header === 'view') {
                           data = (
                             <Text
                               color={textColor}
@@ -311,11 +331,15 @@ function ChangeAccess(props) {
                                 disabled={disable(cell?.row?.original)}
                                 isChecked={values?.access[i]?.view}
                                 defaultChecked={values?.access[i]?.view}
-                                onChange={handleCheckboxChange(i, 'view', "create")}
+                                onChange={handleCheckboxChange(
+                                  i,
+                                  'view',
+                                  'create'
+                                )}
                               />
                             </Text>
                           );
-                        } else if (cell?.column.Header === "update") {
+                        } else if (cell?.column.Header === 'update') {
                           data = (
                             <Text
                               color={textColor}
@@ -330,7 +354,7 @@ function ChangeAccess(props) {
                               />
                             </Text>
                           );
-                        } else if (cell?.column.Header === "delete") {
+                        } else if (cell?.column.Header === 'delete') {
                           data = (
                             <Text
                               color={textColor}
@@ -350,11 +374,11 @@ function ChangeAccess(props) {
                           <Td
                             {...cell?.getCellProps()}
                             key={index}
-                            fontSize={{ sm: "14px" }}
-                            minW={{ sm: "150px", md: "200px", lg: "auto" }}
+                            fontSize={{ sm: '14px' }}
+                            minW={{ sm: '150px', md: '200px', lg: 'auto' }}
                             borderColor="transparent"
                             sx={{
-                              display: cell?.column.Header === "#" && "none",
+                              display: cell?.column.Header === '#' && 'none',
                             }}
                           >
                             {data}
@@ -372,13 +396,18 @@ function ChangeAccess(props) {
           <Button size="sm" variant="brand" onClick={handleSubmit}>
             Save
           </Button>
-          <Button size="sm"
-            onClick={() => { resetForm(); setEditModal(false); setRoleModal(true); }}
+          <Button
+            size="sm"
+            onClick={() => {
+              resetForm();
+              setEditModal(false);
+              setRoleModal(true);
+            }}
             variant="outline"
             colorScheme="red"
             sx={{
               marginLeft: 2,
-              textTransform: "capitalize",
+              textTransform: 'capitalize',
             }}
           >
             Close

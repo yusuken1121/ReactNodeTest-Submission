@@ -1,11 +1,10 @@
-
-import globals from "globals";
-import pluginJs from "@eslint/js";
-import eslintConfigPrettier from "eslint-config-prettier";
+import globals from 'globals';
+import pluginJs from '@eslint/js';
+import eslintConfigPrettier from 'eslint-config-prettier';
 
 export default [
   {
-    files: ["**/*.{js,mjs,cjs}"],
+    files: ['**/*.{js,mjs,cjs}'],
     languageOptions: {
       globals: {
         ...globals.node,
@@ -13,6 +12,7 @@ export default [
     },
     rules: {
       ...pluginJs.configs.recommended.rules,
+      'no-unused-vars': 'warn',
     },
   },
   eslintConfigPrettier,

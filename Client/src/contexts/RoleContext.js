@@ -6,25 +6,23 @@ const RoleContext = createContext();
 
 // Create provider
 export const RoleProvider = ({ children }) => {
-    const [roleData, setRoleData] = useState(null);
+  const [roleData, setRoleData] = useState(null);
 
-    const user = JSON.parse(localStorage.getItem('user'))
+  const user = JSON.parse(localStorage.getItem('user'));
 
-    // Fetch user data from API
-    useEffect(async () => {
-        // Call API here
-        // Example using fetch:
-        if (user) {
-            const response = await getApi(`api/user/view/${user?._id}`)
-            setRoleData(response?.data?.roles)
-        }
-    }, []);
+  // Fetch user data from API
+  useEffect(async () => {
+    // Call API here
+    // Example using fetch:
+    if (user) {
+      const response = await getApi(`api/user/view/${user?._id}`);
+      setRoleData(response?.data?.roles);
+    }
+  }, []);
 
-    return (
-        <RoleContext.Provider value={roleData}>
-            {children}
-        </RoleContext.Provider>
-    );
+  return (
+    <RoleContext.Provider value={roleData}>{children}</RoleContext.Provider>
+  );
 };
 
 // Custom hook to access user data
