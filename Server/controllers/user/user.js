@@ -101,7 +101,7 @@ let deleteData = async (req, res) => {
     if (process.env.DEFAULT_USERS.includes(user?.username)) {
       return res
         .status(400)
-        .json({ message: `You don't have access to delete ${username}` });
+        .json({ message: `You don't have access to delete ${user?.username}` });
     }
     if (!user) {
       return res
