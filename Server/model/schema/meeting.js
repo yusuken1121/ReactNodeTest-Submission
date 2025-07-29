@@ -5,13 +5,13 @@ const meetingHistory = new mongoose.Schema({
   attendes: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Contact',
+      ref: 'Contacts',
     },
   ],
   attendesLead: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Lead',
+      ref: 'Leads',
     },
   ],
   location: String,
@@ -22,7 +22,7 @@ const meetingHistory = new mongoose.Schema({
   createBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    require: true,
+    required: true,
   },
   timestamp: {
     type: Date,
