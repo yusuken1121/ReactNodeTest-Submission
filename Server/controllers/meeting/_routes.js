@@ -1,13 +1,14 @@
 const express = require('express');
 const meeting = require('./meeting');
+const auth = require('../../middelwares/auth');
 
 const router = express.Router();
 
-router.post('/add', meeting.add);
-router.get('/', meeting.index);
-router.get('/:id', meeting.view);
-router.put('/edit/:id', meeting.edit);
-router.delete('/delete/:id', meeting.deleteData);
-router.post('/deleteMany', meeting.deleteMany);
+router.post('/add', auth, meeting.add);
+router.get('/', auth, meeting.index);
+router.get('/view/:id', auth, meeting.view);
+router.put('/edit/:id', auth, meeting.edit);
+router.delete('/delete/:id', auth, meeting.deleteData);
+router.post('/deleteMany', auth, meeting.deleteMany);
 
 module.exports = router;
