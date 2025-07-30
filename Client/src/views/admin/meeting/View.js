@@ -247,7 +247,7 @@ const View = () => {
                                   },
                                 }}
                               >
-                                {item.firstName + ' ' + item.lastName}
+                                {item.fullName}
                               </Text>
                             </Link>
                           );
@@ -276,7 +276,7 @@ const View = () => {
                             data?.attendes.map((item) => {
                               return (
                                 <Text color="blackAlpha.900">
-                                  {item.firstName + ' ' + item.lastName}
+                                  {item.fullName}
                                 </Text>
                               );
                             })

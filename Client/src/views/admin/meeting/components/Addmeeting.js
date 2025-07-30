@@ -27,15 +27,16 @@ import dayjs from 'dayjs';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
 import { LiaMousePointerSolid } from 'react-icons/lia';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { MeetingSchema } from 'schema';
-import { getApi, postApi } from 'services/api';
+import { postApi } from 'services/api';
+import { fetchContactData } from '../../../../redux/slices/contactSlice';
+import { fetchLeadData } from '../../../../redux/slices/leadSlice';
 
 const AddMeeting = (props) => {
   const { onClose, isOpen, setAction, from, fetchData, view } = props;
-  const [leaddata, setLeadData] = useState([]);
-  const [contactdata, setContactData] = useState([]);
+  const dispatch = useDispatch();
   const [isLoding, setIsLoding] = useState(false);
   const [contactModelOpen, setContactModel] = useState(false);
   const [leadModelOpen, setLeadModel] = useState(false);
@@ -66,7 +67,10 @@ const AddMeeting = (props) => {
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: MeetingSchema,
-    onSubmit: (values, { resetForm }) => {},
+    onSubmit: (values, { resetForm }) => {
+      AddData();
+      resetForm();
+    },
   });
   const {
     errors,
@@ -78,25 +82,54 @@ const AddMeeting = (props) => {
     setFieldValue,
   } = formik;
 
-  const AddData = async () => {};
+  // Did not use Redux, referencing the contact
+  // Did not fix typo "Loding", referencing other files
+  const AddData = async () => {
+    try {
+      setIsLoding(true);
+      let response = await postApi('api/meeting/add', values);
+      if (response.status === 201) {
+        toast.success('Meeting created successfully');
+        onClose();
+        setAction((pre) => !pre);
+      } else {
+        toast.error('Failed to create meeting');
+      }
+    } catch (e) {
+      console.log(e);
+      toast.error('An error occurred');
+    } finally {
+      setIsLoding(false);
+    }
+  };
 
-  const fetchAllData = async () => {};
+  const fetchAllData = async () => {
+    try {
+      if (contactList.length === 0) {
+        await dispatch(fetchContactData());
+      }
+      if (leadData.length === 0) {
+        await dispatch(fetchLeadData());
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
-  useEffect(() => {}, [props.id, values.related]);
+  useEffect(() => {
+    fetchAllData();
+  }, []);
 
   const extractLabels = (selectedItems) => {
     return selectedItems.map((item) => item._id);
   };
 
   const countriesWithEmailAsLabel = (
-    values.related === 'Contact' ? contactdata : leaddata
+    values.related === 'Contact' ? contactList : leadData
   )?.map((item) => ({
     ...item,
     value: item._id,
-    label:
-      values.related === 'Contact'
-        ? `${item.firstName} ${item.lastName}`
-        : item.leadName,
+    label: values.related === 'Contact' ? item.fullName : item.leadName,
   }));
 
   return (
@@ -108,7 +141,7 @@ const AddMeeting = (props) => {
         <ModalBody overflowY={'auto'} height={'400px'}>
           {/* Contact Model  */}
           <MultiContactModel
-            data={contactdata}
+            data={contactList}
             isOpen={contactModelOpen}
             onClose={setContactModel}
             fieldName="attendes"
@@ -116,7 +149,7 @@ const AddMeeting = (props) => {
           />
           {/* Lead Model  */}
           <MultiLeadModel
-            data={leaddata}
+            data={leadData}
             isOpen={leadModelOpen}
             onClose={setLeadModel}
             fieldName="attendesLead"
@@ -145,7 +178,6 @@ const AddMeeting = (props) => {
                 borderColor={errors.agenda && touched.agenda ? 'red.300' : null}
               />
               <Text fontSize="sm" mb="10px" color={'red'}>
-                {' '}
                 {errors.agenda && touched.agenda && errors.agenda}
               </Text>
             </GridItem>
@@ -172,7 +204,6 @@ const AddMeeting = (props) => {
                   )}
                   {!props.leadContect && (
                     <>
-                      {' '}
                       <Radio value="Contact">Contact</Radio>
                       <Radio value="Lead">Lead</Radio>
                     </>
@@ -180,13 +211,12 @@ const AddMeeting = (props) => {
                 </Stack>
               </RadioGroup>
               <Text mb="10px" color={'red'} fontSize="sm">
-                {' '}
                 {errors.related && touched.related && errors.related}
               </Text>
             </GridItem>
             {(values.related === 'Contact'
-              ? (contactdata?.length ?? 0) > 0
-              : (leaddata?.length ?? 0) > 0) &&
+              ? (contactList?.length ?? 0) > 0
+              : (leadData?.length ?? 0) > 0) &&
               values.related && (
                 <GridItem colSpan={{ base: 12 }}>
                   <Flex alignItems={'end'} justifyContent={'space-between'}>
@@ -227,7 +257,6 @@ const AddMeeting = (props) => {
                     />
                   </Flex>
                   <Text color={'red'}>
-                    {' '}
                     {errors.attendes && touched.attendes && errors.attendes}
                   </Text>
                 </GridItem>
@@ -255,7 +284,6 @@ const AddMeeting = (props) => {
                 }
               />
               <Text mb="10px" color={'red'} fontSize="sm">
-                {' '}
                 {errors.location && touched.location && errors.location}
               </Text>
             </GridItem>
@@ -284,7 +312,6 @@ const AddMeeting = (props) => {
                 }
               />
               <Text fontSize="sm" mb="10px" color={'red'}>
-                {' '}
                 {errors.dateTime && touched.dateTime && errors.dateTime}
               </Text>
             </GridItem>
@@ -310,7 +337,6 @@ const AddMeeting = (props) => {
                 borderColor={errors.notes && touched.notes ? 'red.300' : null}
               />
               <Text mb="10px" color={'red'}>
-                {' '}
                 {errors.notes && touched.notes && errors.notes}
               </Text>
             </GridItem>

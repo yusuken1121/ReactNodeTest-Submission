@@ -365,9 +365,9 @@ const routes = [
     component: Meeting,
   },
   {
-    name: 'Meetings ',
+    name: 'Meetings',
     layout: [ROLE_PATH.superAdmin, ROLE_PATH.user],
-    under: 'Meetings',
+    under: 'meeting',
     parentName: 'Meetings',
     path: '/meeting/:id',
     component: MeetingView,

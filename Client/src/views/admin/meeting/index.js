@@ -12,11 +12,12 @@ import {
 import { getApi } from 'services/api';
 import { HasAccess } from '../../../redux/accessUtils';
 import CommonCheckTable from '../../../components/reactTable/checktable';
-import { SearchIcon } from '@chakra-ui/icons';
+import { SearchIcon, EditIcon } from '@chakra-ui/icons';
 import { CiMenuKebab } from 'react-icons/ci';
 import { Link, useNavigate } from 'react-router-dom';
 import MeetingAdvanceSearch from './components/MeetingAdvanceSearch';
 import AddMeeting from './components/Addmeeting';
+import Editmeeting from './components/Editmeeting';
 import CommonDeleteModel from 'components/commonDeleteModel';
 import { deleteManyApi } from 'services/api';
 import { toast } from 'react-toastify';
@@ -38,6 +39,9 @@ const Index = () => {
   const [data, setData] = useState([]);
   const [displaySearchData, setDisplaySearchData] = useState(false);
   const [searchedData, setSearchedData] = useState([]);
+
+  const [edit, setEdit] = useState(false);
+  const [selectedId, setSelectedId] = useState();
   const [permission] = HasAccess(['Meetings']);
   const dispatch = useDispatch();
 
@@ -59,10 +63,22 @@ const Index = () => {
               <MenuItem
                 py={2.5}
                 color={'green'}
-                onClick={() => navigate(`/metting/${row?.values._id}`)}
+                onClick={() => navigate(`/meeting/${row?.values._id}`)}
                 icon={<ViewIcon fontSize={15} />}
               >
                 View
+              </MenuItem>
+            )}
+            {permission?.update && (
+              <MenuItem
+                py={2.5}
+                icon={<EditIcon fontSize={15} mb={1} />}
+                onClick={() => {
+                  setEdit(true);
+                  setSelectedId(row?.values?._id);
+                }}
+              >
+                Edit
               </MenuItem>
             )}
             {permission?.delete && (
@@ -94,7 +110,7 @@ const Index = () => {
       Header: 'Agenda',
       accessor: 'agenda',
       cell: (cell) => (
-        <Link to={`/metting/${cell?.row?.values._id}`}>
+        <Link to={`/meeting/${cell?.row?.values._id}`}>
           {' '}
           <Text
             me="10px"
@@ -132,6 +148,7 @@ const Index = () => {
   const handleDeleteMeeting = async (ids) => {
     try {
       setIsLoding(true);
+
       let response = await deleteManyApi('api/meeting/deleteMany', ids);
       if (response.status === 200) {
         setSelectedValues([]);
@@ -206,7 +223,17 @@ const Index = () => {
         setGetTagValues={setGetTagValuesOutside}
         setSearchbox={setSearchboxOutside}
       />
+
+      {/* Add Meeting Modal */}
       <AddMeeting setAction={setAction} isOpen={isOpen} onClose={onClose} />
+
+      {/* Edit Meeting Modal  */}
+      <Editmeeting
+        isOpen={edit}
+        onClose={() => setEdit(false)}
+        setAction={setAction}
+        selectedId={selectedId}
+      />
 
       {/* Delete model */}
       <CommonDeleteModel
