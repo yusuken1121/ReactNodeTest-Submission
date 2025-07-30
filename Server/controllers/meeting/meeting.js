@@ -1,6 +1,33 @@
 const MeetingHistory = require('../../model/schema/meeting');
 const mongoose = require('mongoose');
 
+const formattedMeeting = (meeting) => {
+  const meetingObj = meeting.toObject();
+
+  meetingObj.createdByName = meeting.createBy
+    ? `${meeting.createBy.firstName || ''} ${meeting.createBy.lastName || ''}`.trim()
+    : '';
+
+  meetingObj.attendesNames =
+    meeting.attendes
+      ?.map((attendee) =>
+        `${attendee.firstName || ''} ${attendee.lastName || ''}`.trim()
+      )
+      .join(', ') || '';
+
+  meetingObj.attendesLeadNames =
+    meeting.attendesLead?.map((lead) => lead.leadName || '').join(', ') || '';
+
+  meetingObj.attendeesDisplay =
+    meetingObj.related === 'Contact'
+      ? meetingObj.attendesNames
+      : meetingObj.related === 'Lead'
+        ? meetingObj.attendesLeadNames
+        : '';
+
+  return meetingObj;
+};
+
 const add = async (req, res) => {
   try {
     const {
@@ -30,6 +57,7 @@ const add = async (req, res) => {
     });
 
     await newMeeting.save();
+
     res.status(201).json(newMeeting);
   } catch (err) {
     console.error('Failed to create Meeting:', err);
@@ -51,7 +79,7 @@ const index = async (req, res) => {
       })
       .populate({
         path: 'attendes',
-        select: 'firstName lastName email',
+        select: 'fullName email',
         match: { deleted: false },
       })
       .populate({
@@ -70,7 +98,9 @@ const index = async (req, res) => {
           meeting.attendesLead.length === 0)
     );
 
-    res.status(200).json(filteredMeetings);
+    const formattedMeetings = filteredMeetings.map(formattedMeeting);
+
+    res.status(200).json(formattedMeetings);
   } catch (err) {
     console.error('Failed to retrieve Meetings:', err);
     res
@@ -95,7 +125,7 @@ const view = async (req, res) => {
       })
       .populate({
         path: 'attendes',
-        select: 'firstName lastName email',
+        select: 'fullName email',
         match: { deleted: false },
       })
       .populate({
@@ -110,8 +140,9 @@ const view = async (req, res) => {
         .status(404)
         .json({ message: 'Meeting not found or has been deleted.' });
     }
+    const formattedMeetingData = formattedMeeting(meeting);
 
-    res.status(200).json(meeting);
+    res.status(200).json(formattedMeetingData);
   } catch (err) {
     console.error('Failed to retrieve Meeting:', err);
     res
@@ -186,7 +217,7 @@ const deleteData = async (req, res) => {
 
 const deleteMany = async (req, res) => {
   try {
-    const { ids } = req.body;
+    const ids = req.body;
 
     if (!Array.isArray(ids) || ids.length === 0) {
       return res
