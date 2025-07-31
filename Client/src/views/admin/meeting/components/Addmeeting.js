@@ -124,13 +124,20 @@ const AddMeeting = (props) => {
     return selectedItems.map((item) => item._id);
   };
 
-  const countriesWithEmailAsLabel = (
-    values.related === 'Contact' ? contactList : leadData
-  )?.map((item) => ({
-    ...item,
-    value: item._id,
-    label: values.related === 'Contact' ? item.fullName : item.leadName,
-  }));
+  const dataList =
+    values.related === 'Contact'
+      ? contactList
+      : values.related === 'Lead'
+        ? leadData
+        : [];
+
+  const countriesWithEmailAsLabel = Array.isArray(dataList)
+    ? dataList.map((item) => ({
+        ...item,
+        value: item._id,
+        label: values.related === 'Contact' ? item.fullName : item.leadName,
+      }))
+    : [];
 
   return (
     <Modal onClose={onClose} isOpen={isOpen} isCentered>
@@ -228,20 +235,24 @@ const AddMeeting = (props) => {
                         items={countriesWithEmailAsLabel}
                         className="custom-autoComplete"
                         selectedItems={countriesWithEmailAsLabel?.filter(
-                          (item) =>
-                            values.related === 'Contact'
-                              ? values?.attendes.includes(item._id)
-                              : values.related === 'Lead' &&
-                                values?.attendesLead.includes(item._id)
+                          (item) => {
+                            if (values.related === 'Contact') {
+                              return values.attendes.includes(item._id);
+                            } else if (values.related === 'Lead') {
+                              return values.attendesLead.includes(item._id);
+                            }
+                            return false;
+                          }
                         )}
                         onSelectedItemsChange={(changes) => {
-                          const selectedLabels = extractLabels(
+                          const selectedIds = extractLabels(
                             changes.selectedItems
                           );
-                          values.related === 'Contact'
-                            ? setFieldValue('attendes', selectedLabels)
-                            : values.related === 'Lead' &&
-                              setFieldValue('attendesLead', selectedLabels);
+                          if (values.related === 'Contact') {
+                            setFieldValue('attendes', selectedIds);
+                          } else if (values.related === 'Lead') {
+                            setFieldValue('attendesLead', selectedIds);
+                          }
                         }}
                       />
                     </Text>

@@ -16,16 +16,20 @@ import { IoIosArrowBack } from 'react-icons/io';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { HasAccess } from '../../../redux/accessUtils';
 import { getApi } from 'services/api';
-import { DeleteIcon } from '@chakra-ui/icons';
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import { deleteApi } from 'services/api';
 import CommonDeleteModel from 'components/commonDeleteModel';
 import { FaFilePdf } from 'react-icons/fa';
 import html2pdf from 'html2pdf.js';
+import Editmeeting from './components/Editmeeting';
+
 const View = () => {
   const param = useParams();
 
   const [data, setData] = useState();
   const [deleteMany, setDeleteMany] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [action, setAction] = useState(false);
   const user = JSON.parse(localStorage.getItem('user'));
   const [isLoding, setIsLoding] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -42,6 +46,13 @@ const View = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (action) {
+      fetchData();
+      setAction(false);
+    }
+  }, [action]);
 
   const generatePDF = () => {
     setLoading(true);
@@ -237,7 +248,10 @@ const View = () => {
                       ? data?.attendes &&
                         data?.attendes.map((item) => {
                           return (
-                            <Link to={`/contactView/${item._id}`}>
+                            <Link
+                              to={`/contactView/${item._id}`}
+                              key={item._id}
+                            >
                               <Text
                                 color="brand.600"
                                 sx={{
@@ -256,7 +270,7 @@ const View = () => {
                         ? data?.attendesLead &&
                           data?.attendesLead.map((item) => {
                             return (
-                              <Link to={`/leadView/${item._id}`}>
+                              <Link to={`/leadView/${item._id}`} key={item._id}>
                                 <Text
                                   color="brand.600"
                                   sx={{
@@ -271,20 +285,20 @@ const View = () => {
                               </Link>
                             );
                           })
-                        : data?.related === 'contact'
+                        : data?.related === 'Contact'
                           ? data?.attendes &&
                             data?.attendes.map((item) => {
                               return (
-                                <Text color="blackAlpha.900">
+                                <Text color="blackAlpha.900" key={item._id}>
                                   {item.fullName}
                                 </Text>
                               );
                             })
-                          : data?.related === 'lead'
+                          : data?.related === 'Lead'
                             ? data?.attendesLead &&
                               data?.attendesLead.map((item) => {
                                 return (
-                                  <Text color="blackAlpha.900">
+                                  <Text color="blackAlpha.900" key={item._id}>
                                     {item.leadName}
                                   </Text>
                                 );
@@ -305,7 +319,19 @@ const View = () => {
               <Grid templateColumns="repeat(6, 1fr)" gap={1}>
                 <GridItem colStart={6}>
                   <Flex justifyContent={'right'}>
-                    {user.role === 'superAdmin' || permission?.delete ? (
+                    {permission?.update && (
+                      <Button
+                        size="sm"
+                        onClick={() => setEdit(true)}
+                        leftIcon={<EditIcon />}
+                        mr={2.5}
+                        variant="outline"
+                        colorScheme="green"
+                      >
+                        Edit
+                      </Button>
+                    )}
+                    {permission?.delete && (
                       <Button
                         size="sm"
                         style={{ background: 'red.800' }}
@@ -315,8 +341,6 @@ const View = () => {
                       >
                         Delete
                       </Button>
-                    ) : (
-                      ''
                     )}
                   </Flex>
                 </GridItem>
@@ -325,6 +349,15 @@ const View = () => {
           )}
         </>
       )}
+
+      {/* Edit Meeting Modal */}
+      <Editmeeting
+        isOpen={edit}
+        onClose={() => setEdit(false)}
+        setAction={setAction}
+        selectedId={params.id}
+      />
+
       {/* Delete model */}
       <CommonDeleteModel
         isOpen={deleteMany}

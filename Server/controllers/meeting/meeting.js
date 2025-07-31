@@ -37,6 +37,7 @@ const add = async (req, res) => {
       location,
       dateTime,
       notes,
+      related,
       createBy,
     } = req.body;
 
@@ -53,6 +54,7 @@ const add = async (req, res) => {
       dateTime,
       notes,
       createBy,
+      related,
       timestamp: new Date(), // Set current timestamp
     });
 

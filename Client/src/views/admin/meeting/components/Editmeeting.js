@@ -248,53 +248,54 @@ const Editmeeting = (props) => {
                   {errors.related && touched.related && errors.related}
                 </Text>
               </GridItem>
-              {(values.related === 'Contact'
-                ? (contactData?.length ?? 0) > 0
-                : (leadData?.length ?? 0) > 0) &&
-                values.related !== 'None' && (
-                  <GridItem colSpan={{ base: 12 }}>
-                    <Flex alignItems={'end'} justifyContent={'space-between'}>
-                      <Text w={'100%'}>
-                        <CUIAutoComplete
-                          label={`Choose Preferred Attendes ${values.related === 'Contact' ? 'Contact' : values.related === 'Lead' && 'Lead'}`}
-                          placeholder="Type a Name"
-                          name="attendes"
-                          items={countriesWithEmailAsLabel}
-                          className="custom-autoComplete"
-                          selectedItems={countriesWithEmailAsLabel?.filter(
-                            (item) =>
-                              values.related === 'Contact'
-                                ? values?.attendes.includes(item._id)
-                                : values.related === 'Lead' &&
-                                  values?.attendesLead.includes(item._id)
-                          )}
-                          onSelectedItemsChange={(changes) => {
-                            const selectedLabels = extractLabels(
-                              changes.selectedItems
-                            );
-                            values.related === 'Contact'
-                              ? setFieldValue('attendes', selectedLabels)
-                              : values.related === 'Lead' &&
-                                setFieldValue('attendesLead', selectedLabels);
-                          }}
-                        />
-                      </Text>
-                      <IconButton
-                        mb={6}
-                        onClick={() =>
-                          values.related === 'Contact'
-                            ? setContactModel(true)
-                            : values.related === 'Lead' && setLeadModel(true)
-                        }
-                        fontSize="25px"
-                        icon={<LiaMousePointerSolid />}
+              {values.related && values.related !== 'None' && (
+                <GridItem colSpan={{ base: 12 }}>
+                  <Flex alignItems={'end'} justifyContent={'space-between'}>
+                    <Text w={'100%'}>
+                      <CUIAutoComplete
+                        label={`Choose Preferred Attendes ${values.related === 'Contact' ? 'Contact' : values.related === 'Lead' && 'Lead'}`}
+                        placeholder="Type a Name"
+                        name="attendes"
+                        items={countriesWithEmailAsLabel}
+                        className="custom-autoComplete"
+                        selectedItems={countriesWithEmailAsLabel?.filter(
+                          (item) => {
+                            if (values.related === 'Contact') {
+                              return values.attendes.includes(item._id);
+                            } else if (values.related === 'Lead') {
+                              return values.attendesLead.includes(item._id);
+                            }
+                            return false;
+                          }
+                        )}
+                        onSelectedItemsChange={(changes) => {
+                          const selectedIds = extractLabels(
+                            changes.selectedItems
+                          );
+                          if (values.related === 'Contact') {
+                            setFieldValue('attendes', selectedIds);
+                          } else if (values.related === 'Lead') {
+                            setFieldValue('attendesLead', selectedIds);
+                          }
+                        }}
                       />
-                    </Flex>
-                    <Text color={'red'}>
-                      {errors.attendes && touched.attendes && errors.attendes}
                     </Text>
-                  </GridItem>
-                )}
+                    <IconButton
+                      mb={6}
+                      onClick={() =>
+                        values.related === 'Contact'
+                          ? setContactModel(true)
+                          : values.related === 'Lead' && setLeadModel(true)
+                      }
+                      fontSize="25px"
+                      icon={<LiaMousePointerSolid />}
+                    />
+                  </Flex>
+                  <Text color={'red'}>
+                    {errors.attendes && touched.attendes && errors.attendes}
+                  </Text>
+                </GridItem>
+              )}
               <GridItem colSpan={{ base: 12 }}>
                 <FormLabel
                   display="flex"
